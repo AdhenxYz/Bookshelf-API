@@ -87,20 +87,22 @@ const getAllbooksHandler = (requests, h) => {
       }
     }).code(200)
     return respons
-  } else if (name) {
+  }
+  if (name) {
     const BooksName = books.filter((book) => book.name.toLowerCase().includes(name.toLowerCase()))
     const respons = h.response({
       status: 'success',
       data: {
         books: BooksName.map((book) => ({
-          id: books.id,
-          name: books.name,
-          publisher: books.publisher
+          id: book.id,
+          name: book.name,
+          publisher: book.publisher
         }))
       }
     }).code(200)
     return respons
-  } else if (reading) {
+  }
+  if (reading) {
     const booksReading = books.filter((book) => Number(book.reading) === Number(reading))
     const respons = h.response({
       status: 'success',
@@ -203,20 +205,21 @@ const editBooksByIdHandler = (request, h) => {
 const deleteBooksByIdHandler = (request, h) => {
   const { bookId } = request.params
   const index = books.findIndex((book) => book.id === bookId)
-  if (index === -1) {
+  if (index !== -1) {
+    books.splice(index, 1)
     const respons = h.response({
-      status: 'fail',
-      message: 'Buku gagal dihapus. Id tidak ditemukan'
+      status: 'success',
+      message: 'Buku berhasil dihapus'
     })
-    respons.code(404)
+    respons.code(200)
     return respons
   }
-  books.slice(index, 1)
+
   const respons = h.response({
-    status: 'success',
-    message: 'Buku berhasil dihapus'
+    status: 'fail',
+    message: 'Buku gagal dihapus. Id tidak ditemukan'
   })
-  respons.code(200)
+  respons.code(404)
   return respons
 }
 
